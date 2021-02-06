@@ -29,9 +29,9 @@ def clean_data(df):
     #drop duplicates
     df1 = df1[~df1.duplicated()]
     return df1
-    
+
 def save_data(df, database_filename):
-    engine = create_engine('sqlite:///InsertDatabaseName.db')
+    engine = create_engine('sqlite:///database.db')
     df.to_sql(database_filename, engine, index=False)
     pass  
 
