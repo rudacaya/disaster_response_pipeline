@@ -8,10 +8,10 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
-#from sklearn.externals 
+#from sklearn.externals import joblib
 import joblib
 from sqlalchemy import create_engine
-
+from sqlalchemy import create_engine
 
 
 app = Flask(__name__)
@@ -41,12 +41,19 @@ model = joblib.load("models/classifier.pkl")
 def index():
     
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
+    #graph 2 data
+    df1 = df.copy()
+    df1['length'] = df1['message'].apply(lambda x: len(x.split()))
+    df2 = df1[['length', 'genre']].groupby('genre').mean().reset_index()
+    genres = df2['genre']
+    length = df2['length']
+    x3 = df1.drop(['id', 'original', 'genre', 'original', 'message', 'length'], axis = 1).columns
+    y3 = df1.drop(['id', 'original', 'genre', 'original', 'message', 'length'], axis = 1).sum()
+    
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graphs = [
         {
             'data': [
@@ -65,8 +72,51 @@ def index():
                     'title': "Genre"
                 }
             }
+        },
+        
+        
+        #graph 2
+        {
+            'data': [
+                Bar(
+                    x=genres,
+                    y=length
+                )
+            ],
+
+            'layout': {
+                'title': 'Average Amount of Words by Genres',
+                'yaxis': {
+                    'title': "Average Amount of Words"
+                },
+                'xaxis': {
+                    'title': "Genre"
+                }
+            }
+        },
+        #graph 3
+       
+        {
+            'data': [
+                Bar(
+                    x=x3,
+                    y=y3
+                )
+            ],
+
+            'layout': {
+                'title': 'Amount of messages by Class',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Class"
+                }
+            }
         }
     ]
+
+
     
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
