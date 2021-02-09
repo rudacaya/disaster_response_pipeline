@@ -9,6 +9,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.multioutput import MultiOutputClassifier 
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
+import joblib
 
 from nltk.stem import WordNetLemmatizer 
 import nltk
@@ -16,7 +17,7 @@ nltk.download(['punkt', 'wordnet'])
 
 def load_data(database_filepath):
     engine = create_engine('sqlite:///{}'.format(database_filepath))
-    df = pd.read_sql_table(con = engine, table_name = 'InsertTableName')
+    df = pd.read_sql_table(con = engine, table_name ='data/data/database.db')
     X = df.message
     Y = df.drop(['message', 'id', 'genre', 'original'], axis = 1)
     return X, Y, Y.columns
@@ -44,7 +45,7 @@ def build_model():
         #'clf__estimator__min_samples_split': [2, 10],
     }
     cv = GridSearchCV(pipeline, param_grid=parameters)
-    return cv.best_estimator_
+    return cv
 
 
 def evaluate_model(model, X_test, y_test, category_names):

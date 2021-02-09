@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://d14fo0winaifog.cloudfront.net/plotly-basic.js"></script>
 </head>
@@ -22,8 +23,8 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li><a href="https://www.udacity.com/">Made with Udacity</a></li>
-                <li><a href="https://github.com/">Contact</a></li>
+                <li><a href="https://github.com/rudacaya/disaster_response_pipeline">All the code is here</a></li>
+                <li><a href="https://www.linkedin.com/in/rdca">Made by Rubén D.</a></li>
             </ul>
         </div>
     </div>
@@ -33,19 +34,24 @@
 <div class="jumbotron">
     <div class="container">
         <h1 class="text-center">Disaster Response Project</h1>
-        <p class="text-center">Analyzing message data for disaster response</p>
+        
+        <p class="text-center">Message classifier for disaster response</p>
         <hr />
       
         <div class="row">
             <div class="col-lg-12 form-group-lg">
                 <form action="/go" method="get">
-                    <input type="text" class="form-control form-control-lg" name="query" placeholder="Enter a message to classify">
-                    <div class="col-lg-offset-5">
-                        <button type="submit" class="btn btn-lg btn-success">Classify Message</button>
+                    <input type="text" class="form-control form-control-lg" name="query" placeholder="Enter a message to classify...">
+                    <span style="display:inline-block; width: 4;"></span>
+                    <div class="d-flex justify-content-center">
+                        <div class="col text-center">
+                            <button type="submit" class="btn btn-lg btn-primary">Classify Message</button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
+
 
         {% block message %}
         {% endblock %}
