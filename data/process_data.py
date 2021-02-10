@@ -50,7 +50,7 @@ def clean_data(df):
     df1 = df1[df1.related != 2]
     return df1
 
-def save_data(df, database_filename):
+def save_data(df, database_filename, table = 'database'):
     '''
     save data into a SQLite DB
 
@@ -58,8 +58,8 @@ def save_data(df, database_filename):
         df: cleaned dataframe
         database_filename: filename of the DB
     '''
-    engine = create_engine(database_filename)
-    df.to_sql(database_filename, engine, index=False, if_exists='replace')
+    engine = create_engine('sqlite:///'+database_filename)
+    df.to_sql(table, engine, index=False, if_exists='replace')
     pass  
 
 
