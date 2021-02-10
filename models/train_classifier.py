@@ -15,12 +15,13 @@ from nltk.stem import WordNetLemmatizer
 import nltk
 nltk.download(['punkt', 'wordnet'])
 
-def load_data(database_filepath):
+def load_data(database_filepath, table_name='database'):
     '''
     Loads the data from an SQLite DB to a dataframe
 
     Args:
         database_filepath: The path of the DB file
+        table_name: table name where the data is stored
 
     Returns:
         X: Messages
@@ -28,7 +29,7 @@ def load_data(database_filepath):
         Y.columns: Names of the classes
     '''
     engine = create_engine('sqlite:///{}'.format(database_filepath))
-    df = pd.read_sql_table(con = engine, table_name = database_filepath)
+    df = pd.read_sql_table(con = engine, table_name = table_name)
     X = df.message
     Y = df.drop(['message', 'id', 'genre', 'original'], axis = 1)
     return X, Y, Y.columns

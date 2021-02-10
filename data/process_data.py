@@ -57,6 +57,7 @@ def save_data(df, database_filename, table = 'database'):
     Args:
         df: cleaned dataframe
         database_filename: filename of the DB
+        table: table name where the data is stored
     '''
     engine = create_engine('sqlite:///'+database_filename)
     df.to_sql(table, engine, index=False, if_exists='replace')
