@@ -16,8 +16,19 @@ import nltk
 nltk.download(['punkt', 'wordnet'])
 
 def load_data(database_filepath):
+    '''
+    Loads the data from an SQLite DB to a dataframe
+
+    Args:
+        database_filepath: The path of the DB file
+
+    Returns:
+        X: Messages
+        Y: Labels
+        Y.columns: Names of the classes
+    '''
     engine = create_engine('sqlite:///{}'.format(database_filepath))
-    df = pd.read_sql_table(con = engine, table_name ='data/data/database.db')
+    df = pd.read_sql_table(con = engine, table_name = database_filepath)
     X = df.message
     Y = df.drop(['message', 'id', 'genre', 'original'], axis = 1)
     return X, Y, Y.columns
@@ -25,6 +36,15 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    '''
+    Cleans the text to prepare it for modeling
+
+    Args:
+        text: The message we want to clean
+
+    Returns:
+        Clean_tokens: cleaned messages
+    '''
     tokens = nltk.word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
     clean_tokens = []
@@ -35,6 +55,12 @@ def tokenize(text):
 
 
 def build_model():
+    '''
+    Creates the ML pipeline and defines the hyperparameter tuning
+
+    Returns:
+        cv: GridSearchCV model ready to train
+    '''
     pipeline = Pipeline([
     ('vect', CountVectorizer(tokenizer=tokenize)),
     ('tfidf', TfidfTransformer()),
@@ -50,16 +76,32 @@ def build_model():
 
 
 def evaluate_model(model, X_test, y_test, category_names):
+    '''
+    Evaluates the model performance on each class
+
+    Args:
+        model: model we want to evaluate
+        X_test: part of the data defined for the testing of our model
+        y_test: labels defined for the testing of our model
+        category_names: Class names
+    '''
     y_pred = pd.DataFrame(model.predict(X_test))
     y_pred.columns = category_names
     y_test.columns = category_names
 
     for i in y_test.columns:
-        print('Columna: {}'.format(i))
+        print('Column: {}'.format(i))
         print(classification_report(y_test[i], y_pred[i]))
     pass
 
 def save_model(model, model_filepath):
+    '''
+    Saves the model into a pkl file
+
+    Args:
+        model: model we want to save
+        model_filepath: filepath where we want to save our model
+    '''
     joblib.dump(model, model_filepath)
     pass
 

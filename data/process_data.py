@@ -4,6 +4,16 @@ from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+    Loads the data from csv files to a dataframe
+
+    Args:
+        messages_filepath: filepath of the messages csv file
+        categories_filepath: filepath of the categories csv file
+
+    Returns:
+        df: dataframe with all info loaded
+    '''
     #Read files
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
@@ -13,6 +23,15 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    '''
+    Cleans the categories and drop duplicates
+
+    Args:
+        df: dataframe we want to clean
+
+    Returns:
+        df1: dataframe with cleaned data
+    '''
     categories = df.categories.str.split(';', expand = True)
     #first row to extract category columns names
     row = categories.loc[0,:]
@@ -28,11 +47,19 @@ def clean_data(df):
     df1  = pd.concat([df1, categories], axis = 1) 
     #drop duplicates
     df1 = df1[~df1.duplicated()]
+    df1 = df1[df1.related != 2]
     return df1
 
 def save_data(df, database_filename):
-    engine = create_engine('sqlite:///data/database.db')
-    df.to_sql(database_filename, engine, index=False)
+    '''
+    save data into a SQLite DB
+
+    Args:
+        df: cleaned dataframe
+        database_filename: filename of the DB
+    '''
+    engine = create_engine(database_filename)
+    df.to_sql(database_filename, engine, index=False, if_exists='replace')
     pass  
 
 
@@ -49,7 +76,7 @@ def main():
         df = clean_data(df)
         
         print('Saving data...\n    DATABASE: {}'.format(database_filepath))
-        save_data(df, 'data/{}'.format(database_filepath))
+        save_data(df, database_filepath)
         
         print('Cleaned data saved to database!')
     
